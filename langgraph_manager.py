@@ -241,7 +241,7 @@ class LangGraphManager:
         
         try:
             # Create a temporary connection to the DB to perform the cleanup
-            async with AsyncConnection.connect(self.db_url) as conn:
+            async with await AsyncConnection.connect(self.db_url) as conn:
                 async with conn.cursor() as cur:
                     # LangGraph stores checkpoints in 'checkpoints' and 'checkpoint_blobs'
                     # We remove all entries associated with this thread_id
