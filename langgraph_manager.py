@@ -241,7 +241,7 @@ class LangGraphManager:
         
         try:
             # Create a temporary connection to the DB to perform the cleanup
-            async with AsyncConnection.connect(self.db_url) as conn:
+            async with await AsyncConnection.connect(self.db_url) as conn:
                 async with conn.cursor() as cur:
                     # LangGraph stores checkpoints in 'checkpoints' and 'checkpoint_blobs'
                     # We remove all entries associated with this thread_id
@@ -264,13 +264,15 @@ if __name__ == "__main__":
     
     llm=LangGraphManager(os.getenv('DATABASE_URL'))
     try:
-        # # Using a fixed prompt for automated debugging
-        # prompt=input("Enter prompt: ")
-        # # print(f"Prompt: {prompt}")
-        # # llm.chat(prompt,'debug_thread1')
-        # llm.stream_chat(prompt,'debug_thread1')
+        # Using a fixed prompt for automated debugging
+        prompt=input("Enter prompt: ")
+        # print(f"Prompt: {prompt}")
+        # llm.chat(prompt,'debug_thread1')
 
-        llm.delete_thread('debug_thread1')
+        for chunk in llm.stream_chat(prompt,'debug_thread1'):
+            print(chunk,end='')
+
+        # print(llm.delete_thread('debug_thread1'))
         
     except Exception as e:
         print(f"An error occurred: {e}")
